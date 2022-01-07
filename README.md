@@ -23,3 +23,5 @@ Or redirect to an output file
 ```
 setaspect ./my-screenshot.png > ./what-i-will-post-on-twitter.png
 ```
+
+Or just use the [online version](https://setaspect.seto.xyz/).

@@ -9,7 +9,7 @@ For that reason, the default aspect ratio is 16:9.
 ## Installation
 
 ```
-go install github.com/chrisseto/setaspect
+go install github.com/chrisseto/setaspect@latest
 ```
 
 ## Usage

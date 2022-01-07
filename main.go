@@ -12,8 +12,8 @@ import (
 )
 
 var (
-	outFlag    = flag.String("out", "-", "the path to output the adjusted image to. defaults to stdout")
-	ratioFlag  = flag.String("ratio", "16:9", "the aspect ratio to pad to, in the format h:w. default 16:9")
+	outFlag    = flag.String("out", "-", "the path to output the adjusted image to")
+	ratioFlag  = flag.String("ratio", "16:9", "the aspect ratio to pad to, in the format h:w")
 	ratioRegex = regexp.MustCompile(`^([1-9]\d?):([1-9]\d?)$`)
 )
 
@@ -58,7 +58,7 @@ func exitf(msg string, args ...interface{}) {
 func main() {
 	flag.Parse()
 
-	if flag.ErrHelp != nil || len(flag.Args()) != 1 {
+	if len(flag.Args()) != 1 {
 		flag.Usage()
 		os.Exit(1)
 	}

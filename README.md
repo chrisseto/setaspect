@@ -16,7 +16,7 @@ go install github.com/chrisseto/setaspect@latest
 
 Write to an output file:
 ```
-setaspect ./my-screenshot.png -o ./what-i-will-post-on-twitter.png
+setaspect -o ./what-i-will-post-on-twitter.png /.my-screenshot.png
 ```
 
 Or redirect to an output file

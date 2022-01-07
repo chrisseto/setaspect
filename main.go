@@ -1,11 +1,11 @@
+//go:build !wasm
+
 package main
 
 import (
 	"flag"
 	"fmt"
-	"image"
-	"image/draw"
-	"image/png"
+	"io"
 	"os"
 	"regexp"
 	"strconv"
@@ -20,29 +20,6 @@ var (
 func init() {
 	flag.StringVar(outFlag, "o", "-", "a shortcut for -out")
 	flag.StringVar(ratioFlag, "r", "16:9", "a shortcut for -ratio")
-}
-
-func padImage(i image.Image, width, height int) image.Image {
-	x := i.Bounds().Dx()
-	y := i.Bounds().Dy()
-	offset := image.Pt(0, 0)
-
-	haveAspect := float32(x) / float32(y)
-	wantAspect := float32(width) / float32(height)
-
-	if haveAspect < wantAspect {
-		x = int(wantAspect * float32(y))
-		offset.X = (x - i.Bounds().Dx()) / 2
-	} else {
-		y = int(float32(x) / (float32(width) / float32(height)))
-		offset.Y = (y - i.Bounds().Dy()) / 2
-	}
-
-	padded := image.NewRGBA(image.Rect(0, 0, x, y))
-
-	draw.Draw(padded, i.Bounds().Add(offset), i, image.Pt(0, 0), draw.Src)
-
-	return padded
 }
 
 func isTTY() bool {
@@ -82,12 +59,10 @@ func main() {
 
 	defer file.Close()
 
-	i, err := png.Decode(file)
+	padded, err := SetAspect(file, width, height)
 	if err != nil {
-		exitf("failed to parse '%s' as png: %+v", flag.Arg(0), err)
+		exitf("%+v", err)
 	}
-
-	padded := padImage(i, width, height)
 
 	output := os.Stdout
 	if *outFlag != "-" {
@@ -99,7 +74,7 @@ func main() {
 		defer output.Close()
 	}
 
-	if err := png.Encode(output, padded); err != nil {
+	if _, err := io.Copy(output, padded); err != nil {
 		exitf("failed to write png data to '%s': %+v", *outFlag, err)
 	}
 }

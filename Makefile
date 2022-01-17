@@ -2,7 +2,7 @@ assets/setaspect.wasm: main_wasm.go setaspect.go
 	GOOS=js GOARCH=wasm  go build -o $@ main_wasm.go setaspect.go
 
 setaspect: main.go
-	go build -o $@ main.go
+	go build -o $@ main.go setaspect.go
 
 .PHONY: server
 server:
